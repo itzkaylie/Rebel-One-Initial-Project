@@ -1,0 +1,14 @@
+{
+  "name": "rebel-one-initial-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dashboard comparing Opportunity Atlas county credit outcomes with CFPB complaint counts (state level).",
+  "type": "module",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "prep:atlas": "node scripts/prepare-atlas.mjs",
+    "prep:cfpb": "node scripts/prepare-cfpb.mjs",
+    "supabase:upload": "node --env-file=.env scripts/upload-to-supabase.mjs"
+  }
+}
