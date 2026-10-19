@@ -15,9 +15,4 @@ worth investigating?
 > happened in a specific county, or that one causes the other. Every "signal" is a
 > **hypothesis to investigate**, not a finding.
 
-**Why no framework (like Next.js)?** The site is plain HTML + JavaScript. There is
-nothing to install for the website itself and no build step, so it's the
-simplest thing that runs on Vercel. The prep scripts use only Node.js's built-in
-features, so `npm install` isn't needed either.
-
 ---
