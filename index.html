@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rebel One Initial Project</title>
-  <meta name="description" content="Official county credit outcomes and state complaint counts, side by side, to point to financial problems worth investigating." />
+  <meta name="description" content="Opportunity Atlas, CFPB complaints and links to official 211 dashboards, side by side for any U.S. state, to find questions worth investigating." />
   <link rel="stylesheet" href="styles.css" />
   <script type="module" src="app.js"></script>
   <script>
@@ -25,42 +25,86 @@
   <header class="site-header">
     <div class="wrap narrow">
       <h1>Rebel One Initial Project</h1>
-      <p class="intro">Pick a state to see how people who grew up there are doing with credit, what financial problems residents report most, and three leads worth investigating.</p>
+      <p class="intro">Pick any U.S. state to see three kinds of official public data side by side: credit outcomes, financial problems people report, and requests for community help. Then use them to decide which questions about families' needs are worth investigating.</p>
     </div>
   </header>
 
   <main class="wrap narrow">
-    <section id="status" aria-live="polite"></section>
-
-    <section class="picker" id="controls" hidden>
+    <section class="picker" id="controls">
       <label for="state-select">State</label>
       <select id="state-select"></select>
     </section>
 
-    <section class="findings" id="findings" hidden aria-label="Key findings">
+    <section id="status" aria-live="polite"></section>
+
+    <!-- One card per source. Each card shows its own place and time period. -->
+    <section class="findings three" id="findings" aria-label="What each source shows for this state">
       <article class="finding atlas">
-        <p class="src"><span class="src-dot atlas"></span>Credit outcomes · by county</p>
+        <p class="src"><span class="src-dot atlas"></span>Opportunity Atlas · historical outcomes</p>
+        <p class="scope">By county · people born 1978–1985, measured in 2020</p>
         <div id="atlas-finding"></div>
       </article>
       <article class="finding cfpb">
-        <p class="src"><span class="src-dot cfpb"></span>Reported problems · whole state</p>
+        <p class="src"><span class="src-dot cfpb"></span>CFPB complaints · reported problems</p>
+        <p class="scope" id="cfpb-scope">Whole state · dates shown below</p>
         <div id="cfpb-finding"></div>
+      </article>
+      <article class="finding s211">
+        <p class="src"><span class="src-dot s211"></span>211 · requests for community help</p>
+        <p class="scope">External dashboards · each sets its own areas and dates</p>
+        <div id="s211-finding"></div>
       </article>
     </section>
 
     <section class="leads-block" id="signals-block" hidden>
       <h2>Three leads to investigate</h2>
-      <p class="lede">Each lead is a <strong>hypothesis</strong>, not a finding. A high complaint count alone doesn't make something a business opportunity.</p>
+      <p class="lede">Each lead is a <strong>hypothesis</strong>, not a finding. A high complaint count alone doesn't make something a business opportunity. These leads use the Atlas and CFPB data loaded into this site; 211 data can only be viewed on the official 211 dashboards, so check them yourself (below).</p>
       <div id="signals"></div>
+    </section>
+
+    <!-- 211: links to official dashboards only. No 211 counts are copied,
+         stored, framed or charted on this site (see lib/coverage211.js). -->
+    <section class="s211-panel" id="s211" aria-labelledby="s211-h">
+      <h2 id="s211-h">211: where people are asking for help</h2>
+      <p class="lede">211 is a free, confidential helpline people contact to find local help with things like rent, food, utility bills, jobs or childcare. Some 211 organizations publish <strong>summaries</strong> of what people ask for: totals by need and area, with no names, phone numbers or call notes. It's the closest of the three sources to current community demand.</p>
+
+      <div class="s211-state" id="s211-state"></div>
+
+      <h3>Which states have 211 data on these dashboards?</h3>
+      <p class="meta">Click a state to select it. 211 Data Pulse only includes participating 211 providers, so a state on the list isn't necessarily covered in every community.</p>
+      <div class="tilemap" id="tilemap" role="group" aria-label="211 Data Pulse coverage by state"></div>
+      <ul class="legend" aria-hidden="true">
+        <li><span class="sw dp"></span>Listed in 211 Data Pulse</li>
+        <li><span class="sw none"></span>No 211 data available in 211 Data Pulse</li>
+        <li><span class="sw-mark">C</span>211 Counts dashboard confirmed</li>
+      </ul>
+      <p class="meta" id="tile-text"></p>
+
+      <h3>How to read 211 data</h3>
+      <ul>
+        <li><strong>A request is a signal, not a survey.</strong> It shows what people who contacted 211 asked for, not what every family needs. People who don't know about 211, or who get help elsewhere, aren't counted.</li>
+        <li><strong>A referral isn't a result.</strong> A referral count doesn't prove the person got help or that the need was solved. 211 Data Pulse's FAQ says a referral "does not indicate whether resources were utilized."</li>
+        <li><strong>A "gap" is a partial picture.</strong> Data Pulse counts gaps when no resource could be found, but its FAQ says a gap "is not a full measure of unresolved need."</li>
+        <li><strong>"No 211 data available" doesn't mean "no need."</strong> It only means the dashboards checked here don't include that place.</li>
+        <li><strong>Counts depend on who runs the line.</strong> Categories and coding differ between 211 centers, and one person can ask about several needs.</li>
+      </ul>
+
+      <h3>Questions to bring to LoopedIn</h3>
+      <ol class="checks">
+        <li>"Which needs come up repeatedly in your community?"</li>
+        <li>"What happens when people are referred to existing services? Do they get help, or come back with the same need?"</li>
+      </ol>
+
+      <p class="fine">211 Data Pulse content: United Way Worldwide. 211 Data Pulse. https://211datapulse.org. Accessed October 29, 2026. Its <a href="https://211datapulse.org/terms-of-use.html" target="_blank" rel="noopener">Terms of Use</a> allow informational, non-commercial use only and require attribution. This site isn't affiliated with or endorsed by United Way Worldwide or 211 Counts.</p>
     </section>
 
     <section class="limits" id="limits">
       <h2>Keep in mind</h2>
       <ul>
-        <li><strong>Different places.</strong> Credit outcomes are by county; complaints are counted for the whole state. A state complaint pattern doesn't mean it happened in any particular county.</li>
-        <li><strong>Side by side isn't cause and effect.</strong> Nothing here shows that one causes the other.</li>
-        <li><strong>Complaints aren't a random sample.</strong> They come only from people who chose to file one, and bigger states have more complaints simply because they have more people. Complaints show frustration, not proven demand.</li>
-        <li><strong>The credit data looks back.</strong> It describes people born 1978–1985, by the county where they grew up, measured in 2020 — not today's residents. Numbers for small counties are less certain.</li>
+        <li><strong>Different places and years.</strong> Atlas outcomes are by county and measured in 2020; CFPB complaints are counted for the whole state over the dates shown; 211 dashboards use their own areas and dates. A pattern in one doesn't mean it happened in the same place or time in another.</li>
+        <li><strong>Side by side isn't cause and effect.</strong> Nothing here shows that one causes another.</li>
+        <li><strong>Complaints and 211 requests aren't random samples.</strong> They come only from people who chose to file or call. Bigger states have more simply because they have more people. They show frustration or need, not proven demand for a product.</li>
+        <li><strong>The credit data looks back.</strong> It describes people born 1978–1985, by the county where they grew up, measured in 2020, not today's residents. Numbers for small counties are less certain.</li>
       </ul>
       <h3>Before treating a lead as an opportunity, check:</h3>
       <ol class="checks">
@@ -70,60 +114,12 @@
       </ol>
     </section>
 
-    <!-- Recommended next source. Text and links only: no 211 numbers are loaded,
-         stored or charted on this site. Sources checked on Oct 29, 2026. -->
-    <section class="next-source" id="next-211" aria-labelledby="next-211-h">
-      <p class="next-tag">Recommended next source · not analyzed on this site yet</p>
-      <h2 id="next-211-h">Where I'd look next: 211 community needs data</h2>
-      <p>211 is a free, confidential helpline people contact to find local help with things like rent, food or utility bills. Some 211 organizations publish <strong>summaries</strong> of the kinds of help people ask for: totals by category and area, with no names or personal details. That could add a more direct signal of what families need right now, for needs such as <strong>housing, childcare, jobs, food and utilities</strong>. The Atlas looks back at long-run outcomes, and CFPB complaints show problems with financial products.</p>
-
-      <div class="next-grid">
-        <article class="next-card">
-          <h3><a href="https://al.211counts.org/" target="_blank" rel="noopener">Alabama 211 Counts dashboard</a></h3>
-          <p><strong>Covers:</strong> Alabama.</p>
-          <p><strong>What it shows:</strong> total calls and help requests, the top request categories (such as housing &amp; shelter, utilities, food, employment &amp; income, and child care &amp; parenting), smaller subcategories like rent assistance, a share marked "unmet", a map by ZIP code, county or legislative district, and month-by-month counts.</p>
-          <p><strong>Access:</strong> view it online. Its "About the data" notes don't mention a download or API, so this site links to it instead of importing it.</p>
-          <p class="fine">Its notes say one caller can make more than one request, and call centers code requests differently, so category totals don't always match.</p>
-        </article>
-
-        <article class="next-card">
-          <h3><a href="https://211datapulse.org/" target="_blank" rel="noopener">211 Data Pulse</a> <span class="fine">(<a href="https://211datapulse.org/faqs.html" target="_blank" rel="noopener">FAQ</a>)</span></h3>
-          <p><strong>Covers:</strong> a pilot from United Way Worldwide. Its state list currently shows Alabama, Maine, Massachusetts, New Jersey, North Carolina, Pennsylvania, South Dakota, Virginia and Wisconsin. <strong>New York is not on the list.</strong></p>
-          <p><strong>What it shows:</strong> top needs, top referrals and top "gaps" (needs where no resource was found), with filters by state, county, ZIP code and more. Its FAQ says data is added monthly.</p>
-          <p><strong>Access:</strong> view it online. The FAQ says it can't provide downloadable data in this early version, and it mentions no API.</p>
-          <p class="fine">The FAQ says clients' names aren't shared with it, counts under 10 are hidden, and a gap "is not a full measure of unresolved need."</p>
-        </article>
-
-        <article class="next-card">
-          <h3>211 New York</h3>
-          <p><strong>Covers:</strong> New York.</p>
-          <p class="unverified"><strong>No public needs data found yet.</strong> The <a href="https://www.211newyork.org/inquiry-services-page" target="_blank" rel="noopener">Community Needs Assessment page</a> showed no assessment, data or report when checked, and 211 Data Pulse doesn't list New York. To get New York request data, ask 211 New York directly whether it publishes aggregated summaries.</p>
-          <p class="fine">Related, but not needs data: the <a href="https://search.211newyork.org/" target="_blank" rel="noopener">211 New York service search</a>, run by New York State 211, is a directory of local services people can be referred to. It doesn't publish counts of requests, and it notes it is "still under construction."</p>
-        </article>
-      </div>
-
-      <h3>What 211 data can and can't tell us</h3>
-      <ul>
-        <li><strong>It shows what people who contacted 211 asked for.</strong> It isn't a survey of every family. People who don't know about 211, or who get help elsewhere, aren't counted.</li>
-        <li><strong>A referral isn't a result.</strong> A referral count doesn't prove the person got help or that the need was solved.</li>
-        <li><strong>Counts depend on who runs the line.</strong> Categories and coding differ between 211 centers, so compare places carefully.</li>
-        <li><strong>Public summaries only.</strong> This project uses only aggregated, public summaries. It never requests, stores or shows private caller records, names, phone numbers or call notes.</li>
-      </ul>
-
-      <h3>Questions to bring to LoopedIn</h3>
-      <ol class="checks">
-        <li>"Which needs come up repeatedly in your community?"</li>
-        <li>"What happens when people are referred to existing services? Do they get help, or come back with the same need?"</li>
-      </ol>
-      <p class="fine">Links and descriptions checked on October 29, 2026. Coverage can change, so check each site's current list before citing it.</p>
-    </section>
-
     <details class="data-details" id="details">
       <summary>Data details</summary>
       <div class="details-body">
         <section>
           <h3>About this project</h3>
-          <p><strong>Project question:</strong> Where do the Opportunity Atlas credit outcomes suggest financial barriers, and what financial problems do people report that might be worth investigating?</p>
+          <p><strong>Project question:</strong> Where are families experiencing needs, what helps improve economic mobility, and where could new opportunities be opening?</p>
           <div id="data-status"></div>
         </section>
 
@@ -163,7 +159,9 @@
   <footer class="wrap narrow site-footer">
     <p><strong>Sources (official data only):</strong>
       <a href="https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html" target="_blank" rel="noopener">Opportunity Atlas Data Tables (U.S. Census Bureau)</a> ·
-      <a href="https://www.consumerfinance.gov/data-research/consumer-complaints/" target="_blank" rel="noopener">CFPB Consumer Complaint Database</a>.</p>
+      <a href="https://www.consumerfinance.gov/data-research/consumer-complaints/" target="_blank" rel="noopener">CFPB Consumer Complaint Database</a> ·
+      <a href="https://211datapulse.org/" target="_blank" rel="noopener">211 Data Pulse (United Way Worldwide)</a> ·
+      <a href="https://211counts.org/" target="_blank" rel="noopener">211 Counts</a> (linked, not imported).</p>
     <p id="data-stamp" class="muted"></p>
   </footer>
 </body>

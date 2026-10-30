@@ -1,18 +1,18 @@
 # Rebel One Initial Project
 
-A small dashboard for a business idea research challenge. It puts two official
-data sources side by side:
+A small dashboard for a business idea research challenge. Pick any U.S. state
+(or DC) to see three official public sources side by side:
 
-- **Opportunity Atlas** (U.S. Census Bureau / Opportunity Insights) — county-level credit outcomes in 2020, such as average credit score and 90+ day delinquency rates, for people born 1978–1985, by the county where they **grew up**.
-- **CFPB Consumer Complaint Database** — counts of complaints people filed about financial products, grouped by **state**, product, issue and year.
+- **Opportunity Atlas** (U.S. Census Bureau / Opportunity Insights): historical outcomes. County-level credit outcomes in 2020, such as average credit score and 90+ day delinquency rates, for people born 1978–1985, by the county where they **grew up**.
+- **CFPB Consumer Complaint Database**: reported financial problems. Counts of complaints people filed about financial products, grouped by **state**, product, issue and year.
+- **211** (211 Data Pulse and 211 Counts): requests for community help and resource gaps. **Linked, not imported**; see "How 211 works on this site" below.
 
-**Project question:** Where do the Opportunity Atlas credit outcomes suggest
-financial barriers, and what financial problems do people report that might be
-worth investigating?
+**Project question:** Where are families experiencing needs, what helps improve
+economic mobility, and where could new opportunities be opening?
 
-> The two sources describe different people, places (county vs. state) and years.
-> The site shows them side by side only. It never says a state complaint pattern
-> happened in a specific county, or that one causes the other. Every "signal" is a
+> The sources describe different people, places and years. The site shows them
+> side by side only. It never says a pattern in one happened in the same place
+> or time in another, or that one causes another. Every lead is a
 > **hypothesis to investigate**, not a finding.
 
 ---
@@ -26,6 +26,7 @@ rebel-one-initial-project/
 ├── app.js                loads the data and draws the dashboard
 ├── lib/
 │   ├── signals.js        the rules that generate the 3–5 hypotheses (read it!)
+│   ├── coverage211.js    which official 211 dashboards cover which states (hand-checked list, no counts)
 │   └── states.js         state FIPS codes ↔ postal codes (a fixed lookup table)
 ├── data/                 small files the site reads — created by the prep scripts
 ├── demo-data/            MADE-UP sample data (fictional "Demo State"), only shown at ?demo=1
@@ -70,7 +71,7 @@ features, so `npm install` isn't needed either.
    ```bash
    npm start
    ```
-4. Open **http://localhost:3000** in your browser. You'll see **"Waiting for data"** — that's correct until you add the official files.
+4. Open **http://localhost:3000** in your browser. Until you add the official files, the credit and complaint cards say the data isn't added yet. That's expected; the 211 section already works.
 5. Want to see the layout first? Open **http://localhost:3000/?demo=1**. Every panel is stamped **DEMO DATA, NOT A REAL FINDING**.
 6. To stop the preview, click in the terminal and press `Ctrl+C`.
 
@@ -199,12 +200,23 @@ Not needed for this version. If you want the data in a database too, follow **`d
 
 ## What the page shows
 
-1. **One sentence** saying what the dashboard does, then the **state picker**.
-2. **Two key findings:** the county with the weakest credit outcome (Opportunity Atlas, by county) and the most common complaint (CFPB, whole state).
-3. **Three leads to investigate**, each labeled as a hypothesis, with what the data shows, why it could matter, and a next step.
-4. **Keep in mind:** the data's limits and three checks to separate signal from noise.
-5. **Where I'd look next: 211 community needs data**: a recommended next source, with links to the Alabama 211 Counts dashboard, 211 Data Pulse (and its FAQ) and the 211 New York Community Needs Assessment, their limits, and questions to bring to LoopedIn. This section is text and links only. No 211 numbers are loaded or charted, and the site never uses private caller records. Coverage was checked on Oct 29, 2026; no public 211 needs data was found for New York (the Community Needs Assessment page showed no data when checked, and 211 Data Pulse doesn't list New York).
+1. **One sentence** saying what the dashboard does, then the **state picker**. Every state and DC can be picked, even before Atlas or CFPB data is added.
+2. **Three source cards**, each showing its own place and time period: the county with the weakest credit outcome (Atlas), the most common complaint (CFPB), and whether official 211 dashboards cover the state.
+3. **Three leads to investigate** (from Atlas and CFPB), each labeled as a hypothesis.
+4. **211: where people are asking for help**: links for the chosen state, a clickable U.S. map of 211 Data Pulse coverage, how to read 211 data, and questions for LoopedIn.
+5. **Keep in mind:** the data's limits and three checks to separate signal from noise.
 6. **Data details** (collapsed): project question, data status, measure and group menus, exact source fields for every number, full county and complaint tables, how leads are chosen, and the Copy data box for AI Studio.
+
+## How 211 works on this site
+
+**What was checked (Oct 29, 2026):**
+
+- **211 Data Pulse** (United Way Worldwide): no API, and its FAQ says it can't provide downloadable data yet. Its site blocks being shown inside other websites. Its [Terms of Use](https://211datapulse.org/terms-of-use.html) forbid framing, copying or automatically extracting content, require attribution, and allow **informational, non-commercial use only** (other uses need written approval from United Way Worldwide; email 211@uww.unitedway.org).
+- **211 Counts** (created at Washington University in St. Louis): public dashboards, with no download or API mentioned. Its main site now shows a bot-check page, so its list of states couldn't be checked. Only the Alabama dashboard was opened directly.
+
+**So the site links to the official dashboards and shows no 211 numbers.** `lib/coverage211.js` lists the 9 states on 211 Data Pulse's [participating organizations page](https://211datapulse.org/partners.html) (AL, ME, MA, NJ, NC, PA, SD, VA, WI) and the one confirmed 211 Counts dashboard (Alabama). Every other state shows "No 211 data available in 211 Data Pulse", and 211 Counts as "not confirmed". The page never says "no need".
+
+**To update the 211 list:** open the partners page, compare with `lib/coverage211.js`, edit the list, and change `CHECKED_ON`. Only add a 211 Counts dashboard after you've opened it yourself.
 
 ## How the leads are chosen
 
@@ -220,13 +232,15 @@ The page shows the first three that the data supports, in that order, so the lea
 
 ## Troubleshooting
 
-- **"Waiting for data" after running the prep commands** — make sure you ran them from inside the project folder and that `data/atlas/index.json` and `data/cfpb/index.json` now exist. Reload the page.
+- **"Atlas and CFPB data not added yet" after running the prep commands** — make sure you ran them from inside the project folder and that `data/atlas/index.json` and `data/cfpb/index.json` now exist. Reload the page.
 - **`prep:atlas` says a column wasn't found** — the error lists every column in the file. Put the exact names in `scripts/atlas-config.json` under `columns` (for the credit files: `"stateFips": "par_state"`, `"countyFips": "par_county"`). The current script already recognizes those names.
 - **`prep:cfpb` says columns are missing** — make sure it's a CFPB complaint CSV and not the .zip; unzip first.
 - **`npm start` says the port is in use** — run `PORT=3001 npm start` (Mac/Linux) or `$env:PORT=3001; npm start` (Windows PowerShell), then open http://localhost:3001.
-- **The live Vercel site shows "Waiting for data"** — the `data` folder wasn't uploaded/committed. Upload it and redeploy.
+- **The live site says "Atlas and CFPB data not added yet"**: the `data` folder wasn't uploaded. Upload it and redeploy. The 211 section works without it.
 
 ## Sources
 
 - [Opportunity Atlas Data Tables — U.S. Census Bureau](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) (credit outcomes released 2025 with the paper "Credit Access in the United States")
 - [CFPB Consumer Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/) — complaints are not a statistical sample of consumers' experiences.
+- [211 Data Pulse — United Way Worldwide](https://211datapulse.org/) ([FAQ](https://211datapulse.org/faqs.html), [participating organizations](https://211datapulse.org/partners.html), [Terms of Use](https://211datapulse.org/terms-of-use.html)): linked, not imported.
+- [211 Counts](https://211counts.org/) ([Alabama dashboard](https://al.211counts.org/)): linked, not imported.
